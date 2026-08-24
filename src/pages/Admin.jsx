@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Admin({ wishes, updateWishStatus }) {
+export default function Admin({ wishes, updateWishStatus, deleteWish }) {
   const [tab, setTab] = useState('pending');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -87,6 +87,7 @@ export default function Admin({ wishes, updateWishStatus }) {
                 {tab !== 'hidden' && (
                   <button className="action preview" style={{ padding: '8px 12px', fontSize: '13px', flex: 1 }} onClick={() => updateWishStatus(w.id, 'hidden')}>✕ ซ่อน</button>
                 )}
+                <button className="action" style={{ padding: '8px 12px', fontSize: '13px', flex: 1, background: '#ff4d4d', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' }} onClick={() => { if (window.confirm('ต้องการลบคำอวยพรนี้จริงหรือไม่?')) deleteWish(w.id); }}>🗑 ลบ</button>
               </div>
             </div>
           ))}

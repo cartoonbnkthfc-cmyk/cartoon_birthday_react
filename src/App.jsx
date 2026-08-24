@@ -95,11 +95,30 @@ export default function App() {
     }
   };
 
+  const deleteWish = async (id) => {
+    try {
+      const newWishes = wishes.filter(w => w.id !== id);
+      setWishes(newWishes);
+
+      const { error } = await supabase
+        .from('wishes')
+        .delete()
+        .eq('id', id);
+        
+      if (error) {
+        console.error('Error deleting wish:', error);
+        fetchWishes();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home wishes={wishes} addWish={addWish} />} />
-        <Route path="/admin" element={<Admin wishes={wishes} updateWishStatus={updateWishStatus} />} />
+        <Route path="/admin" element={<Admin wishes={wishes} updateWishStatus={updateWishStatus} deleteWish={deleteWish} />} />
       </Routes>
     </BrowserRouter>
   );
