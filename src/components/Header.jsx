@@ -48,7 +48,7 @@ export default function Header({ wishCount = 0 }) {
         <a className={activeSection === 'wish' ? 'active' : ''} href="#wish" onClick={(e) => scrollToSection(e, 'wish')}>BIRTHDAY WISH</a>
         <a className={activeSection === 'wall' ? 'active' : ''} href="#wall" onClick={(e) => scrollToSection(e, 'wall')}>WISH WALL</a>
       </nav>
-      <div className="count">♥ <span>{wishCount}</span> WISHES</div>
+      <div className="count">ღ <span>{wishCount}</span> WISHES</div>
       <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
     </header>
   );

@@ -1,5 +1,5 @@
 export default function Hero() {
-  const text = "♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON \u00A0\u00A0\u00A0";
+  const text = "♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON \u00A0\u00A0\u00A0";
 
   return (
     <>

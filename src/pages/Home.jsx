@@ -15,8 +15,8 @@ export default function Home({ wishes, addWish }) {
       </main>
       <div className="marquee-strip marquee-strip-desktop" aria-hidden="true">
         <div className="marquee-track">
-          <span>♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;</span>
-          <span>♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ♡ 26.08.2026 ♡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;</span>
+          <span>♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;</span>
+          <span>♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;♡ Happy Cartoon 17th Birthday ｡ • 26.08.2026 • ｡ #17CANDLESWITHCARTOON &nbsp;&nbsp;&nbsp;</span>
         </div>
       </div>
       <Footer />
