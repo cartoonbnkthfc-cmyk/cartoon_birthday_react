@@ -8,7 +8,7 @@ export default function Hero() {
           <source media="(max-width: 900px)" srcSet="/assets/hero_mobile.jpg" />
           <img src="/assets/hero_desktop.png" alt="Happy Cartoon Day" />
         </picture>
-        <div className="hero-fade" />
+
         <div className="marquee-strip" aria-hidden="true">
           <div className="marquee-track">
             <span>{text}{text}{text}{text}</span><span>{text}{text}{text}{text}</span>

@@ -53,7 +53,6 @@ export default function App() {
         created_at: new Date().toISOString()
       };
       setWishes([optimisticWish, ...wishes]);
-      alert('ส่งคำอวยพรเรียบร้อยแล้ว รอการอนุมัติเพื่อแสดงผลบนกำแพงนะคะ 💖');
 
       const newWish = {
         bg: wishData.bg,
