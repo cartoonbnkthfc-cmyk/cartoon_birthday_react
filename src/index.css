@@ -622,3 +622,16 @@ textarea { height: 125px; resize: vertical; }
     display: none;
   }
 }
+/* ===== ADMIN PASSWORD ===== */
+
+/* ซ่อนปุ่มแสดงรหัสที่ Browser บางตัวใส่มาเอง */
+.admin-password-input::-ms-reveal,
+.admin-password-input::-ms-clear {
+  display: none;
+}
+
+/* ป้องกันช่องรหัสมีองค์ประกอบซ้อน */
+.admin-password-input {
+  appearance: none;
+  -webkit-appearance: none;
+}

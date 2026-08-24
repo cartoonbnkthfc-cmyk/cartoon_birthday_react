@@ -7,8 +7,14 @@ export default function Admin({
   deleteWish
 }) {
   const [tab, setTab] = useState('pending');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // จำสถานะ Login แม้ Refresh หน้า
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => sessionStorage.getItem('adminAuthenticated') === 'true'
+  );
+
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const adminPassword =
     import.meta.env.VITE_ADMIN_PASSWORD || 'cartoon17';
@@ -18,7 +24,9 @@ export default function Admin({
   // =========================
   const handleLogin = () => {
     if (password === adminPassword) {
+      sessionStorage.setItem('adminAuthenticated', 'true');
       setIsAuthenticated(true);
+      setPassword('');
     } else {
       alert('รหัสผ่านไม่ถูกต้อง ❌');
     }
@@ -52,23 +60,142 @@ export default function Admin({
         >
           <h2>🔒 ใส่รหัสผ่านแอดมิน</h2>
 
-          <input
-            type="password"
-            placeholder="รหัสผ่าน..."
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleLogin();
-              }
-            }}
+          {/* =========================
+              PASSWORD INPUT
+          ========================= */}
+          <div
             style={{
+              position: 'relative',
               width: '100%',
               marginTop: '20px',
               marginBottom: '20px',
             }}
-          />
+          >
+            <input
+              className="admin-password-input"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="รหัสผ่าน..."
+              value={password}
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleLogin();
+                }
+              }}
+              style={{
+                width: '100%',
+                paddingRight: '52px',
+              }}
+            />
 
+            {/* =========================
+                SHOW / HIDE PASSWORD
+            ========================= */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowPassword((prev) => !prev);
+              }}
+              aria-label={
+                showPassword
+                  ? 'ซ่อนรหัสผ่าน'
+                  : 'แสดงรหัสผ่าน'
+              }
+              title={
+                showPassword
+                  ? 'ซ่อนรหัสผ่าน'
+                  : 'แสดงรหัสผ่าน'
+              }
+              style={{
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '32px',
+                height: '32px',
+                padding: 0,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                color: '#7562a4',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {showPassword ? (
+                // ตาขีด = กำลังแสดงรหัส
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 3L21 21"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M10.6 10.6C10.2 11 10 11.5 10 12C10 13.1 10.9 14 12 14C12.5 14 13 13.8 13.4 13.4"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+
+                  <path
+                    d="M9.9 4.2C10.6 4.07 11.3 4 12 4C17.5 4 21 9.5 21 9.5C21 9.5 20.25 10.68 18.9 12"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  <path
+                    d="M6.6 6.6C4.4 8.1 3 10.5 3 10.5C3 10.5 6.5 16 12 16C13.5 16 14.8 15.6 16 15"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                // ตาปกติ = รหัสถูกซ่อน
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2 12C2 12 5.5 6 12 6C18.5 6 22 12 22 12C22 12 18.5 18 12 18C5.5 18 2 12 2 12Z"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          {/* =========================
+              LOGIN BUTTON
+          ========================= */}
           <button
             className="action send"
             style={{
@@ -123,6 +250,9 @@ export default function Admin({
   // =========================
   return (
     <>
+      {/* =========================
+          HEADER
+      ========================= */}
       <header
         style={{
           background: '#fff',
@@ -149,6 +279,9 @@ export default function Admin({
         </div>
       </header>
 
+      {/* =========================
+          MAIN
+      ========================= */}
       <main
         style={{
           marginTop: '110px',
@@ -156,7 +289,9 @@ export default function Admin({
       >
         <h2>จัดการคำอวยพร</h2>
 
-        {/* TAB */}
+        {/* =========================
+            TABS
+        ========================= */}
         <div
           style={{
             display: 'flex',
@@ -164,6 +299,7 @@ export default function Admin({
             margin: '20px 0',
           }}
         >
+          {/* รออนุมัติ */}
           <button
             onClick={() => setTab('pending')}
             className={`action ${
@@ -175,6 +311,7 @@ export default function Admin({
             รออนุมัติ ({pendingCount})
           </button>
 
+          {/* ผ่านแล้ว */}
           <button
             onClick={() => setTab('approved')}
             className={`action ${
@@ -186,6 +323,7 @@ export default function Admin({
             ผ่านแล้ว ({approvedCount})
           </button>
 
+          {/* ซ่อนไว้ */}
           <button
             onClick={() => setTab('hidden')}
             className={`action ${
@@ -198,13 +336,16 @@ export default function Admin({
           </button>
         </div>
 
-        {/* WISH CARDS */}
+        {/* =========================
+            WISH CARDS
+        ========================= */}
         <div
           className="wall"
           style={{
             maxWidth: '100%',
           }}
         >
+          {/* ไม่มีข้อมูล */}
           {filteredWishes.length === 0 && (
             <div
               style={{
@@ -218,10 +359,13 @@ export default function Admin({
             </div>
           )}
 
+          {/* รายการคำอวยพร */}
           {filteredWishes.map((w, i) => (
             <div key={w.id || i}>
 
-              {/* CARD */}
+              {/* =========================
+                  CARD
+              ========================= */}
               <div
                 className="letter-card"
                 style={{
@@ -229,12 +373,14 @@ export default function Admin({
                   aspectRatio: 'auto',
                 }}
               >
+                {/* Header */}
                 <div className="letter-header">
                   <span className="letter-number">
                     {w.name}
                   </span>
                 </div>
 
+                {/* Body */}
                 <div className="letter-body">
                   <p
                     className="letter-msg letter-msg-full"
@@ -245,6 +391,7 @@ export default function Admin({
                     {w.message}
                   </p>
 
+                  {/* รูปภาพ */}
                   {w.img && (
                     <div
                       className="letter-img-full"
@@ -261,7 +408,9 @@ export default function Admin({
                 </div>
               </div>
 
-              {/* ACTION BUTTONS */}
+              {/* =========================
+                  ACTION BUTTONS
+              ========================= */}
               <div
                 style={{
                   display: 'flex',
@@ -323,11 +472,12 @@ export default function Admin({
                     cursor: 'pointer',
                   }}
                   onClick={() => {
-                    if (
+                    const confirmed =
                       window.confirm(
                         'ต้องการลบคำอวยพรนี้จริงหรือไม่?'
-                      )
-                    ) {
+                      );
+
+                    if (confirmed) {
                       deleteWish(w.id);
                     }
                   }}
