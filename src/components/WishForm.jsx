@@ -202,9 +202,9 @@ export default function WishForm({ onAddWish }) {
       )}
 
       {showSuccess && recapData && (
-        <div className="wish-modal-overlay" onClick={() => setShowSuccess(false)} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+        <div className="wish-modal-overlay" onClick={() => setShowSuccess(false)} style={{ flexDirection: 'column' }}>
           
-          <div style={{ position: 'relative', width: 'fit-content', maxWidth: '800px', minWidth: '320px', animation: 'popIn 0.4s' }}>
+          <div style={{ position: 'relative', width: 'fit-content', maxWidth: '800px', minWidth: '320px', animation: 'popIn 0.4s', margin: 'auto', flexShrink: 0 }}>
             
             {/* The white modal frame (like other popups) */}
             <div className="wish-modal-content success-modal" onClick={(e) => e.stopPropagation()} style={{ padding: '20px', margin: '0', width: '100%', maxWidth: '100%' }}>
