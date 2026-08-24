@@ -20,9 +20,19 @@ export default function App() {
   };
 
   // =========================
-  // โหลดข้อมูลครั้งแรก
+  // โหลดคำอวยพรทั้งหมดจาก Supabase
   // =========================
   const fetchWishes = async () => {
+    // 1. โหลดจาก LocalStorage ก่อนเพื่อให้แสดงผลทันที (Stale-While-Revalidate)
+    try {
+      const cachedWishes = localStorage.getItem('cartoon_wishes_cache');
+      if (cachedWishes) {
+        setWishes(JSON.parse(cachedWishes));
+      }
+    } catch (e) {
+      console.error('Cache error:', e);
+    }
+
     try {
       setIsLoading(true);
 
@@ -36,9 +46,19 @@ export default function App() {
         return;
       }
 
-      setWishes(data || []);
+      const newWishes = data || [];
+      setWishes(newWishes);
+      
+      // อัปเดต Cache
+      try {
+        // เก็บลง Cache (ถ้าเกินโควต้า 5MB อาจจะ error ให้ ignore ไป)
+        localStorage.setItem('cartoon_wishes_cache', JSON.stringify(newWishes));
+      } catch (e) {
+        console.warn('Could not save to localStorage, size might be too large');
+      }
+      
     } catch (err) {
-      console.error('Catch fetch error:', err);
+      console.error('Unexpected error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -59,8 +79,10 @@ export default function App() {
           schema: 'public',
           table: 'wishes',
         },
-        (payload) => {
-          const newWish = payload.new;
+        async (payload) => {
+          const { data } = await supabase.from('wishes').select('*').eq('id', payload.new.id).single();
+          if (!data) return;
+          const newWish = data;
 
           setWishes((prev) => {
             // ป้องกันข้อมูลซ้ำ
@@ -82,8 +104,10 @@ export default function App() {
           schema: 'public',
           table: 'wishes',
         },
-        (payload) => {
-          const updatedWish = payload.new;
+        async (payload) => {
+          const { data } = await supabase.from('wishes').select('*').eq('id', payload.new.id).single();
+          if (!data) return;
+          const updatedWish = data;
 
           setWishes((prev) => {
             const exists = prev.some(

@@ -395,6 +395,7 @@ textarea { height: 125px; resize: vertical; }
 .letter-msg-full {
   -webkit-line-clamp: unset;
   overflow: visible;
+  margin-bottom: 8px;
 }
 .letter-name {
   color: var(--card-color);
@@ -455,21 +456,31 @@ textarea { height: 125px; resize: vertical; }
 
 /* Full image in modal */
 .letter-img-full {
-  margin: 16px 0;
+  margin: 0 0 16px 0;
   border-radius: 8px;
   overflow: hidden;
-  border: 3px solid var(--card-color);
-  opacity: 0.95;
+  text-align: center;
+  order: -1;
 }
 .letter-img-full img {
-  width: 100%;
-  display: block;
+  max-width: 100%;
+  max-height: 450px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  display: inline-block;
 }
 
 /* Modal card overrides */
 .letter-card-modal {
   aspect-ratio: auto;
   max-height: 80vh;
+}
+.letter-card-modal.has-modal-img,
+.letter-card-modal.no-modal-img {
+  width: 500px;
+  max-width: 100%;
 }
 .letter-body-modal {
   overflow-y: auto;
@@ -503,8 +514,10 @@ textarea { height: 125px; resize: vertical; }
 }
 .wish-modal-content {
   position: relative;
-  max-width: 520px;
-  width: 100%;
+  max-width: 800px;
+  width: fit-content;
+  min-width: 320px;
+  margin: 0 auto;
   animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .wish-modal-close {
@@ -635,3 +648,8 @@ textarea { height: 125px; resize: vertical; }
   appearance: none;
   -webkit-appearance: none;
 }
+/* Recap Action Buttons */
+.recap-action-btn { background: #fff; border: none; border-radius: 50px; padding: 10px 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.2s ease; }
+.recap-action-btn:hover { background: #e2e2e2; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+.recap-action-dl { color: #333; }
+.recap-action-close { color: #ff4d4f; padding: 10px 24px; gap: 6px; }

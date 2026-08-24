@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ScrollReveal from './ScrollReveal';
 
-export default function WishWall({ wishes }) {
+export default function WishWall({ wishes, isLoading }) {
   const [selectedWish, setSelectedWish] = useState(null);
   const approvedWishes = wishes.filter(w => w.status === 'approved');
 
@@ -51,17 +51,17 @@ export default function WishWall({ wishes }) {
 
   // Full card in the modal (no clamp, show image)
   const ModalCard = ({ w, index }) => (
-    <div className="letter-card letter-card-modal" style={{ '--card-color': w.bg }}>
+    <div className={`letter-card letter-card-modal ${w.img ? 'has-modal-img' : 'no-modal-img'}`} style={{ '--card-color': w.bg }}>
       <div className="letter-header">
         <span className="letter-number">คำอวยพรที่ {approvedWishes.length - index}</span>
       </div>
       <div className="letter-body letter-body-modal">
-        <p className="letter-msg letter-msg-full">{w.message}</p>
         {w.img && (
           <div className="letter-img-full">
             <img src={w.img} alt="attached" />
           </div>
         )}
+        <p className="letter-msg letter-msg-full">{w.message}</p>
         <div className="letter-name">— {w.name}</div>
       </div>
     </div>
@@ -87,9 +87,18 @@ export default function WishWall({ wishes }) {
         <ScrollReveal>
           <div className="wall empty-wall">
             <div className="empty-message">
-              <div className="empty-heart">♡</div>
-              <h3>ยังไม่มีคำอวยพร</h3>
-              <p>คำอวยพรที่ได้รับการอนุมัติ<br/>จะปรากฏที่นี่</p>
+              {isLoading ? (
+                <>
+                  <div className="empty-heart" style={{ animation: 'bounce 1s infinite' }}>💌</div>
+                  <h3>กำลังโหลดคำอวยพร...</h3>
+                </>
+              ) : (
+                <>
+                  <div className="empty-heart">♡</div>
+                  <h3>ยังไม่มีคำอวยพร</h3>
+                  <p>คำอวยพรที่ได้รับการอนุมัติ<br/>จะปรากฏที่นี่</p>
+                </>
+              )}
             </div>
           </div>
         </ScrollReveal>

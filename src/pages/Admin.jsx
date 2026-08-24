@@ -382,21 +382,12 @@ export default function Admin({
 
                 {/* Body */}
                 <div className="letter-body">
-                  <p
-                    className="letter-msg letter-msg-full"
-                    style={{
-                      fontSize: '13px',
-                    }}
-                  >
-                    {w.message}
-                  </p>
-
                   {/* รูปภาพ */}
                   {w.img && (
                     <div
                       className="letter-img-full"
                       style={{
-                        marginTop: '10px',
+                        marginBottom: '10px',
                       }}
                     >
                       <img
@@ -405,6 +396,14 @@ export default function Admin({
                       />
                     </div>
                   )}
+                  <p
+                    className="letter-msg letter-msg-full"
+                    style={{
+                      fontSize: '13px',
+                    }}
+                  >
+                    {w.message}
+                  </p>
                 </div>
               </div>
 

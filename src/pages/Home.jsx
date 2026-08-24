@@ -4,14 +4,14 @@ import WishForm from '../components/WishForm';
 import WishWall from '../components/WishWall';
 import Footer from '../components/Footer';
 
-export default function Home({ wishes, addWish }) {
+export default function Home({ wishes, addWish, isLoading }) {
   return (
     <>
       <Header wishCount={wishes.filter(w => w.status === 'approved').length} />
       <Hero />
       <main>
         <WishForm onAddWish={addWish} />
-        <WishWall wishes={wishes} />
+        <WishWall wishes={wishes} isLoading={isLoading} />
       </main>
       <div className="marquee-strip marquee-strip-desktop" aria-hidden="true">
         <div className="marquee-track">
