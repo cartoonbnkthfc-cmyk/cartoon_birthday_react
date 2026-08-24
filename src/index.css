@@ -385,7 +385,7 @@ textarea { height: 125px; resize: vertical; }
   word-break: break-word;
   flex: 1;
   min-width: 0;
-  order: 1;
+  
   /* Clamp on wall */
   display: -webkit-box;
   -webkit-line-clamp: 4;
