@@ -1,11 +1,50 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Admin({ wishes, updateWishStatus }) {
   const [tab, setTab] = useState('pending');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+
+  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'cartoon17';
+
+  if (!isAuthenticated) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100svh', background: 'linear-gradient(180deg, #f2a2c1 0%, #eaf6fa 100%)' }}>
+        <div className="panel" style={{ width: '90%', maxWidth: '400px', textAlign: 'center', display: 'block' }}>
+          <h2>🔒 ใส่รหัสผ่านแอดมิน</h2>
+          <input 
+            type="password" 
+            placeholder="รหัสผ่าน..." 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                if (password === adminPassword) setIsAuthenticated(true);
+                else alert('รหัสผ่านไม่ถูกต้อง ❌');
+              }
+            }}
+            style={{ width: '100%', marginTop: '20px', marginBottom: '20px' }}
+          />
+          <button 
+            className="action send" 
+            style={{ width: '100%' }}
+            onClick={() => {
+              if (password === adminPassword) setIsAuthenticated(true);
+              else alert('รหัสผ่านไม่ถูกต้อง ❌');
+            }}
+          >
+            เข้าสู่ระบบ
+          </button>
+          <div style={{ marginTop: '20px' }}>
+            <Link to="/" style={{ color: '#9585ae', textDecoration: 'underline' }}>กลับหน้าแรก</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const filteredWishes = wishes.filter(w => w.status === tab);
-
   const pendingCount = wishes.filter(w => w.status === 'pending').length;
   const approvedCount = wishes.filter(w => w.status === 'approved').length;
   const hiddenCount = wishes.filter(w => w.status === 'hidden').length;
