@@ -1,39 +1,99 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
+import { supabase } from './supabase';
 
 export default function App() {
   const [wishes, setWishes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchWishes = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('wishes')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching wishes:', error);
+      } else if (data) {
+        setWishes(data);
+      }
+    } catch (err) {
+      console.error('Catch error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    try {
-      const data = JSON.parse(localStorage.getItem('cartoonWishes') || '[]');
-      setWishes(Array.isArray(data) ? data : []);
-    } catch {
-      setWishes([]);
-    }
+    fetchWishes();
+    
+    // Subscribe to real-time changes
+    const subscription = supabase
+      .channel('wishes_channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'wishes' }, () => {
+        fetchWishes(); // Refetch on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
-  const saveWishes = (newWishes) => {
-    setWishes(newWishes);
-    localStorage.setItem('cartoonWishes', JSON.stringify(newWishes));
+  const addWish = async (wishData) => {
+    try {
+      // Optimistic update for fast UI
+      const optimisticWish = {
+        ...wishData,
+        id: 'temp-' + Date.now(),
+        status: 'pending',
+        created_at: new Date().toISOString()
+      };
+      setWishes([optimisticWish, ...wishes]);
+      alert('ส่งคำอวยพรเรียบร้อยแล้ว รอการอนุมัติเพื่อแสดงผลบนกำแพงนะคะ 💖');
+
+      const newWish = {
+        bg: wishData.bg,
+        name: wishData.name,
+        message: wishData.message,
+        img: wishData.img,
+        status: 'pending'
+      };
+      
+      const { error } = await supabase.from('wishes').insert([newWish]);
+      
+      if (error) {
+        console.error('Error inserting wish:', error);
+        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูลลงฐานข้อมูลครับ');
+        fetchWishes(); // Revert optimistic update
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const addWish = (wishData) => {
-    const newWish = {
-      ...wishData,
-      id: Date.now().toString(),
-      status: 'pending',
-      date: new Date().toISOString()
-    };
-    saveWishes([newWish, ...wishes]);
-    alert('ส่งคำอวยพรเรียบร้อยแล้ว รอการอนุมัติเพื่อแสดงผลบนกำแพงนะคะ 💖');
-  };
+  const updateWishStatus = async (id, newStatus) => {
+    try {
+      // Optimistic update
+      const newWishes = wishes.map(w => w.id === id ? { ...w, status: newStatus } : w);
+      setWishes(newWishes);
 
-  const updateWishStatus = (id, newStatus) => {
-    const newWishes = wishes.map(w => w.id === id ? { ...w, status: newStatus } : w);
-    saveWishes(newWishes);
+      const { error } = await supabase
+        .from('wishes')
+        .update({ status: newStatus })
+        .eq('id', id);
+        
+      if (error) {
+        console.error('Error updating status:', error);
+        alert('เกิดข้อผิดพลาดในการอัปเดตสถานะ');
+        fetchWishes(); // Revert optimistic update
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

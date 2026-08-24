@@ -13,8 +13,11 @@ export default function Header({ wishCount = 0 }) {
       const sections = ['home', 'wish', 'wall'];
       sections.forEach(id => {
         const el = document.getElementById(id);
-        if (el && window.scrollY >= el.offsetTop - 150) {
-          current = id;
+        if (el) {
+          const absoluteTop = el.getBoundingClientRect().top + window.scrollY;
+          if (window.scrollY >= absoluteTop - 150) {
+            current = id;
+          }
         }
       });
       // Fallback: If scrolled to the absolute bottom, always highlight wall
