@@ -63,20 +63,29 @@ export default function Admin({ wishes, updateWishStatus }) {
           <button onClick={() => setTab('hidden')} className={`action ${tab === 'hidden' ? 'send' : 'preview'}`}>ซ่อนไว้ ({hiddenCount})</button>
         </div>
         
-        <div className="wall">
-          {filteredWishes.length === 0 && <div>ไม่มีข้อมูล</div>}
+        <div className="wall" style={{ maxWidth: '100%' }}>
+          {filteredWishes.length === 0 && <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#b09a90' }}>ไม่มีข้อมูล</div>}
           {filteredWishes.map((w, i) => (
-            <div key={w.id || i} className="wish" style={{background: w.bg}}>
-              <div style={{fontWeight:800, color:'#ed589a'}}>{w.name}</div>
-              <div style={{margin:'10px 0', whiteSpace:'pre-line'}}>{w.message}</div>
-              {w.img && <img src={w.img} style={{width:'100%', borderRadius:'10px'}} alt="attached" />}
-              
-              <div style={{display:'flex', gap:'10px', marginTop:'15px'}}>
+            <div key={w.id || i}>
+              <div className="letter-card" style={{ '--card-color': w.bg, aspectRatio: 'auto' }}>
+                <div className="letter-header">
+                  <span className="letter-number">{w.name}</span>
+                </div>
+                <div className="letter-body">
+                  <p className="letter-msg letter-msg-full" style={{ fontSize: '13px' }}>{w.message}</p>
+                  {w.img && (
+                    <div className="letter-img-full" style={{ marginTop: '10px' }}>
+                      <img src={w.img} alt="attached" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
                 {tab !== 'approved' && (
-                  <button className="action send" style={{padding:'8px', fontSize:'13px'}} onClick={() => updateWishStatus(w.id, 'approved')}>✔ อนุมัติ</button>
+                  <button className="action send" style={{ padding: '8px 12px', fontSize: '13px', flex: 1 }} onClick={() => updateWishStatus(w.id, 'approved')}>✔ อนุมัติ</button>
                 )}
                 {tab !== 'hidden' && (
-                  <button className="action preview" style={{padding:'8px', fontSize:'13px'}} onClick={() => updateWishStatus(w.id, 'hidden')}>✕ ซ่อน</button>
+                  <button className="action preview" style={{ padding: '8px 12px', fontSize: '13px', flex: 1 }} onClick={() => updateWishStatus(w.id, 'hidden')}>✕ ซ่อน</button>
                 )}
               </div>
             </div>
