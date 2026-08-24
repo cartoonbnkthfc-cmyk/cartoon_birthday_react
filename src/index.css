@@ -474,9 +474,20 @@ textarea { height: 125px; resize: vertical; }
   display: inline-block;
 }
 
+@media (max-width: 768px) {
+  .letter-img-full {
+    flex-shrink: 1;
+    min-height: 0;
+  }
+  .letter-img-full img {
+    max-height: 200px;
+  }
+}
+
 /* Modal card overrides */
 .letter-card-modal {
   aspect-ratio: auto;
+  max-height: 85vh;
 }
 .letter-card-modal.has-modal-img,
 .letter-card-modal.no-modal-img {
@@ -484,7 +495,8 @@ textarea { height: 125px; resize: vertical; }
   max-width: 100%;
 }
 .letter-body-modal {
-  /* Removed overflow-y: auto */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Total wishes badge */
@@ -509,18 +521,16 @@ textarea { height: 125px; resize: vertical; }
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: 60px 20px;
-  overflow-y: auto;
+  padding: 20px;
 }
 .wish-modal-content {
   position: relative;
   max-width: 800px;
   width: fit-content;
   min-width: 320px;
-  margin: auto;
-  flex-shrink: 0;
+  margin: 0 auto;
   animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .wish-modal-close {

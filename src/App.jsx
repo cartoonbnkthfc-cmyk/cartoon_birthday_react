@@ -4,6 +4,46 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import { supabase } from './supabase';
 
+// =========================
+// IndexedDB Cache Helper (ป้องกันปัญหา LocalStorage เต็ม 5MB)
+// =========================
+const DB_NAME = 'CartoonWishesDB';
+const STORE_NAME = 'wishes_cache_store';
+
+const initDB = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (e) => {
+      e.target.result.createObjectStore(STORE_NAME);
+    };
+  });
+};
+
+const saveToIDB = async (data) => {
+  try {
+    const db = await initDB();
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put(data, 'cache');
+  } catch(e) {
+    console.error('IDB save error', e);
+  }
+};
+
+const getFromIDB = async () => {
+  try {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+      const request = db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get('cache');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  } catch(e) {
+    return null;
+  }
+};
+
 export default function App() {
   const [wishes, setWishes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,9 +53,7 @@ export default function App() {
   // =========================
   const sortWishes = (items) => {
     return [...items].sort(
-      (a, b) =>
-        new Date(b.created_at || 0) -
-        new Date(a.created_at || 0)
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
   };
 
@@ -23,18 +61,23 @@ export default function App() {
   // โหลดคำอวยพรทั้งหมดจาก Supabase
   // =========================
   const fetchWishes = async () => {
-    // 1. โหลดจาก LocalStorage ก่อนเพื่อให้แสดงผลทันที (Stale-While-Revalidate)
+    // 1. โหลดจาก IndexedDB ก่อนเพื่อให้แสดงผลทันที (ไม่ติดลิมิต 5MB แบบ LocalStorage)
+    let hasCache = false;
     try {
-      const cachedWishes = localStorage.getItem('cartoon_wishes_cache');
-      if (cachedWishes) {
-        setWishes(JSON.parse(cachedWishes));
+      const cachedWishes = await getFromIDB();
+      if (cachedWishes && Array.isArray(cachedWishes) && cachedWishes.length > 0) {
+        setWishes(cachedWishes);
+        hasCache = true;
+        setIsLoading(false); // ปิด Loading ทันทีถ้ามี Cache
       }
     } catch (e) {
       console.error('Cache error:', e);
     }
 
     try {
-      setIsLoading(true);
+      if (!hasCache) {
+        setIsLoading(true);
+      }
 
       const { data, error } = await supabase
         .from('wishes')
@@ -50,12 +93,7 @@ export default function App() {
       setWishes(newWishes);
       
       // อัปเดต Cache
-      try {
-        // เก็บลง Cache (ถ้าเกินโควต้า 5MB อาจจะ error ให้ ignore ไป)
-        localStorage.setItem('cartoon_wishes_cache', JSON.stringify(newWishes));
-      } catch (e) {
-        console.warn('Could not save to localStorage, size might be too large');
-      }
+      await saveToIDB(newWishes);
       
     } catch (err) {
       console.error('Unexpected error:', err);
