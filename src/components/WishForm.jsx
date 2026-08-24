@@ -202,9 +202,9 @@ export default function WishForm({ onAddWish }) {
       )}
 
       {showSuccess && recapData && (
-        <div className="wish-modal-overlay" onClick={() => setShowSuccess(false)} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="wish-modal-overlay" onClick={() => setShowSuccess(false)} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '40px 20px', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
           
-          <div style={{ position: 'relative', width: 'fit-content', maxWidth: '800px', minWidth: '320px', animation: 'popIn 0.4s', flexShrink: 0 }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '500px', minWidth: '280px', animation: 'popIn 0.4s', margin: '0 auto' }}>
             
             {/* The white modal frame (like other popups) */}
             <div className="wish-modal-content success-modal" onClick={(e) => e.stopPropagation()} style={{ padding: '20px', margin: '0', width: '100%', maxWidth: '100%' }}>
@@ -212,37 +212,37 @@ export default function WishForm({ onAddWish }) {
               <h3 className="success-title" style={{ fontSize: '20px', marginBottom: '5px' }}>ส่งคำอวยพรเรียบร้อยแล้ว!</h3>
               <p className="success-text" style={{ fontSize: '13px', marginBottom: '20px' }}>รอการอนุมัติเพื่อแสดงผลบนกำแพงนะคะ 🩷</p>
               
-              {/* Recap Card */}
-              <div id="recap-card" className={`letter-card letter-card-modal ${recapData.imgUrl ? 'has-modal-img' : 'no-modal-img'}`} style={{ '--card-color': recapData.bg, margin: '0 auto', textAlign: 'left', pointerEvents: 'none', position: 'relative' }}>
-                <div className="letter-header" style={{ position: 'relative' }}>
-                <span className="letter-number">Cartoon's Birthday 🎂</span>
-                <img 
-                  src="/assets/cartoon_logo.png" 
-                  alt="Cartoon Logo" 
-                  style={{ 
-                    position: 'absolute',
-                    right: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    height: '55px', 
-                    opacity: 0.95,
-                    zIndex: 10
-                  }} 
-                />
-              </div>
-                <div className="letter-body letter-body-modal" style={{ overflow: 'hidden' }}>
-                  {recapData.imgUrl && (
-                    <div className="letter-img-full">
-                      <img src={recapData.imgUrl} alt="Attached" />
-                    </div>
-                  )}
-                  <p className="letter-msg letter-msg-full">{recapData.message}</p>
-                  <div className="letter-name">— {recapData.name}</div>
+              <div className="recap-preview-wrapper">
+                <div id="recap-card" className={`letter-card letter-card-modal ${recapData.imgUrl ? 'has-modal-img' : 'no-modal-img'}`} style={{ '--card-color': recapData.bg, margin: '0 auto', textAlign: 'left', pointerEvents: 'none', position: 'relative', maxHeight: 'none', overflow: 'visible' }}>
+                  <div className="letter-header" style={{ position: 'relative' }}>
+                  <span className="letter-number">Cartoon's Birthday 🎂</span>
+                  <img 
+                    src="/assets/cartoon_logo.png" 
+                    alt="Cartoon Logo" 
+                    style={{ 
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      height: '55px', 
+                      opacity: 0.95,
+                      zIndex: 10
+                    }} 
+                  />
+                  </div>
+                  <div className="letter-body letter-body-modal" style={{ overflow: 'hidden' }}>
+                    {recapData.imgUrl && (
+                      <div className="letter-img-full">
+                        <img src={recapData.imgUrl} alt="attached" />
+                      </div>
+                    )}
+                    <p className="letter-msg letter-msg-full">{recapData.message}</p>
+                    <div className="letter-name">— {recapData.name}</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Floating Buttons Below */}
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px', gap: '10px' }}>
               <button 
                 className="recap-action-btn recap-action-dl"
@@ -253,7 +253,7 @@ export default function WishForm({ onAddWish }) {
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                ดาวน์โหลดรูปภาพ / Share to X
+                ดาวน์โหลดรูปภาพ
               </button>
               
               <button 

@@ -33,13 +33,23 @@ const saveToIDB = async (data) => {
 
 const getFromIDB = async () => {
   try {
-    const db = await initDB();
-    return new Promise((resolve, reject) => {
-      const request = db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get('cache');
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
+    if (!window.indexedDB) return null;
+    
+    // ตั้งเวลา Timeout 2 วินาที ป้องกัน IDB ค้างบนจอมือถือบางรุ่น
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('IDB Timeout')), 2000));
+    
+    const dbPromise = (async () => {
+      const db = await initDB();
+      return new Promise((resolve, reject) => {
+        const request = db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get('cache');
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    })();
+    
+    return await Promise.race([dbPromise, timeout]);
   } catch(e) {
+    console.warn('IDB get error or timeout:', e);
     return null;
   }
 };
@@ -92,8 +102,8 @@ export default function App() {
       const newWishes = data || [];
       setWishes(newWishes);
       
-      // อัปเดต Cache
-      await saveToIDB(newWishes);
+      // อัปเดต Cache แบบ Background ไม่ต้องรอ
+      saveToIDB(newWishes).catch(console.error);
       
     } catch (err) {
       console.error('Unexpected error:', err);
